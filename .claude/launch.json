@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cliniq-fixtures",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev:fixtures"],
+      "port": 3100
+    }
+  ]
+}

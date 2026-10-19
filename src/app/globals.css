@@ -1,26 +1,70 @@
 @import "tailwindcss";
 
+/* Tokens from the ClinIQ prototype. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  color-scheme: light;
+  --bg: #f1f4f5;
+  --surface: #ffffff;
+  --surface-2: #e9eef0;
+  --ink: #15222a;
+  --muted: #5a6e77;
+  --line: #d6e0e3;
+  --line-strong: #b7c6cb;
+  --accent: #11566b;
+  --accent-tint: #e2eef1;
+  --on-accent: #ffffff;
+  --crit: #a3301f;
+  --crit-tint: #fbe6e2;
+  --warn: #8a5100;
+  --warn-tint: #fbf0dd;
+  --good: #1c6440;
+  --good-tint: #e0f0e7;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    color-scheme: dark;
+    --bg: #0d1518;
+    --surface: #162126;
+    --surface-2: #1d2b31;
+    --ink: #e5edef;
+    --muted: #93a7ae;
+    --line: #26353b;
+    --line-strong: #3a4e56;
+    --accent: #58b4c7;
+    --accent-tint: #15323b;
+    --on-accent: #0d1518;
+    --crit: #e87763;
+    --crit-tint: #3a1d18;
+    --warn: #d6a052;
+    --warn-tint: #33280f;
+    --good: #51bd85;
+    --good-tint: #12301f;
   }
 }
 
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-accent-tint: var(--accent-tint);
+  --color-on-accent: var(--on-accent);
+  --color-crit: var(--crit);
+  --color-crit-tint: var(--crit-tint);
+  --color-warn: var(--warn);
+  --color-warn-tint: var(--warn-tint);
+  --color-good: var(--good);
+  --color-good-tint: var(--good-tint);
+  --font-sans: var(--font-plex-sans), system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
 }

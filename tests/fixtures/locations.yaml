@@ -1,0 +1,53 @@
+# TEST DATA ONLY. Invented places for the Playwright flow and local
+# development (CLINIQ_LOCATIONS_FILE). Never use for a demo.
+locations:
+  - id: test-pharmacy-a
+    name: Test Pharmacy A
+    kind: pharmacy
+    participating: true
+    address: 100 Test St, Vancouver
+    phone: 604-555-0101
+    lat: 49.2917
+    lng: -123.1207
+    hours: { mon: "00:00-24:00", tue: "00:00-24:00", wed: "00:00-24:00", thu: "00:00-24:00", fri: "00:00-24:00", sat: "00:00-24:00", sun: "00:00-24:00" }
+    wait: { minutes: 10, read_at: "2026-10-18T14:00:00-07:00", source: test fixture }
+  - id: test-pharmacy-b
+    name: Test Pharmacy B
+    kind: pharmacy
+    participating: false
+    address: 200 Test St, Vancouver
+    phone: 604-555-0102
+    lat: 49.2854
+    lng: -123.1207
+    hours: { mon: "00:00-24:00", tue: "00:00-24:00", wed: "00:00-24:00", thu: "00:00-24:00", fri: "00:00-24:00", sat: "00:00-24:00", sun: "00:00-24:00" }
+    wait: null
+  - id: test-clinic-near
+    name: Test Walk-in Near
+    kind: walk_in
+    participating: false
+    address: 300 Test St, Vancouver
+    phone: 604-555-0103
+    lat: 49.3007
+    lng: -123.1207
+    hours: { mon: "00:00-24:00", tue: "00:00-24:00", wed: "00:00-24:00", thu: "00:00-24:00", fri: "00:00-24:00", sat: "00:00-24:00", sun: "00:00-24:00" }
+    wait: { minutes: 120, read_at: "2026-10-18T14:00:00-07:00", source: test fixture }
+  - id: test-clinic-far
+    name: Test Walk-in Far
+    kind: walk_in
+    participating: true
+    address: 400 Test St, Vancouver
+    phone: 604-555-0104
+    lat: 49.3367
+    lng: -123.1207
+    hours: { mon: "00:00-24:00", tue: "00:00-24:00", wed: "00:00-24:00", thu: "00:00-24:00", fri: "00:00-24:00", sat: "00:00-24:00", sun: "00:00-24:00" }
+    wait: { minutes: 20, read_at: "2026-10-18T14:00:00-07:00", source: test fixture }
+  - id: test-ed
+    name: Test Hospital ED
+    kind: emergency_department
+    participating: false
+    address: 500 Test St, Vancouver
+    phone: 604-555-0105
+    lat: 49.3097
+    lng: -123.1207
+    hours: { mon: "00:00-24:00", tue: "00:00-24:00", wed: "00:00-24:00", thu: "00:00-24:00", fri: "00:00-24:00", sat: "00:00-24:00", sun: "00:00-24:00" }
+    wait: { minutes: 240, read_at: "2026-10-18T14:00:00-07:00", source: test fixture }

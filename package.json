@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "dev:fixtures": "CLINIQ_LOCATIONS_FILE=tests/fixtures/locations.yaml next dev -p 3100",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "next": "15.5.4",
@@ -19,6 +21,7 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@playwright/test": "^1.56.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
