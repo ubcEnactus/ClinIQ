@@ -1,0 +1,24 @@
+# Stage 1 directory: ten real Vancouver-area locations, entered by hand.
+#
+# Every wait must be the number the location actually published, with the
+# time it was read (read_at, ISO 8601 with offset) and where it was read
+# (source). No invented numbers anywhere in the demo.
+#
+# Sources: Medimap for walk-ins, edwaittimes.ca for VCH / Fraser Health EDs.
+# A location that publishes no wait gets `wait: null`.
+#
+# Shape (see src/content/data-schemas.ts):
+#
+#   - id: example-pharmacy
+#     name: ...
+#     kind: pharmacy            # pharmacy | walk_in | emergency_department
+#     participating: false      # a ClinIQ customer
+#     address: ...
+#     phone: ...
+#     lat: 49.0
+#     lng: -123.0
+#     hours: { mon: "09:00-21:00", tue: ..., sun: closed }   # "00:00-24:00" for 24h
+#     wait: { minutes: 35, read_at: "2026-10-18T14:05:00-07:00", source: medimap.ca }
+#
+# TODO(business team): capture the ten locations.
+locations: []

@@ -1,0 +1,26 @@
+# Appendix B. The 21 conditions BC pharmacists can assess, plus contraception,
+# in the words a patient would use. This is the list screen 4 opens on "No".
+# A condition without a file in conditions/ routes to a physician.
+conditions:
+  - { id: acne, label: Mild acne }
+  - { id: allergic_rhinitis, label: Hay fever and seasonal allergies }
+  - { id: pink_eye, label: Pink eye }
+  - { id: skin_rash, label: Skin rash }
+  - { id: period_pain, label: Period pain }
+  - { id: upset_stomach, label: Upset stomach }
+  - { id: heartburn, label: Heartburn }
+  - { id: fungal_infection, label: Fungal infections }
+  - { id: headache, label: Headaches }
+  - { id: hemorrhoids, label: Hemorrhoids }
+  - { id: cold_sores, label: Cold sores }
+  - { id: impetigo, label: Impetigo }
+  - { id: canker_sores, label: Canker sores }
+  - { id: oral_thrush, label: Oral thrush }
+  - { id: musculoskeletal_pain, label: Sore joints or muscles }
+  - { id: smoking_cessation, label: Quitting smoking }
+  - { id: shingles, label: Shingles }
+  - { id: pinworms, label: Pinworms }
+  - { id: uti, label: Urinary tract infection }
+  - { id: itching, label: "Itching, including bug bites" }
+  - { id: yeast_infection, label: Yeast infection }
+  - { id: contraception, label: Contraception }

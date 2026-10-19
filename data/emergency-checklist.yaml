@@ -1,0 +1,16 @@
+# Appendix A. Patient screen 2.
+# A fixed list, never a model. One checked item stops the flow.
+# It never gets shorter without written approval from the business team,
+# and needs clinician sign-off before launch.
+heading: First, a quick safety check
+instruction: Check anything you are experiencing right now
+none_label: None of these
+items:
+  - { id: chest_pain, label: Chest pain or pressure }
+  - { id: trouble_breathing, label: Trouble breathing }
+  - { id: stroke_signs, label: "Face drooping, arm weakness, or sudden trouble speaking" }
+  - { id: heavy_bleeding, label: Heavy bleeding that will not stop }
+  - { id: fainting_confusion, label: "Fainting, or confusion that is new" }
+  - { id: throat_swelling, label: "Swelling of the lips, tongue, or throat" }
+  - { id: worst_headache, label: A sudden headache that is the worst you have ever had }
+  - { id: self_harm, label: Thoughts of harming yourself }

@@ -1,0 +1,102 @@
+# Urinary tract infection. Question set from Appendix C.
+# Changing a rule here is a clinical change: it needs a reviewed commit.
+id: uti
+version: 1
+name: Urinary tract infection
+patient_phrase: a urinary tract infection
+synonyms:
+  - uti
+  - urinary tract infection
+  - bladder infection
+  - burning when i pee
+  - burns when i pee
+  - burning pee
+  - peeing a lot
+  - pee a lot
+  - painful urination
+  - cloudy urine
+  - cloudy pee
+
+review:
+  status: pending
+
+questions:
+  - id: duration
+    text: How long have you had symptoms?
+    type: single
+    options:
+      - { value: under_2_days, label: Under 2 days }
+      - { value: 2_to_7_days, label: 2 to 7 days }
+      - { value: over_a_week, label: Over a week }
+
+  - id: symptoms
+    text: Which of these are you having?
+    type: multi
+    key_positive: true
+    options:
+      - { value: burning, label: Burning }
+      - { value: frequency, label: Frequency }
+      - { value: urgency, label: Urgency }
+      - { value: cloudy_urine, label: Cloudy urine }
+
+  - id: systemic
+    text: Fever, back pain, or vomiting?
+    type: yesno
+
+  - id: pregnant
+    text: Could you be pregnant?
+    type: single
+    options:
+      - { value: "yes", label: "Yes" }
+      - { value: "no", label: "No" }
+      - { value: not_applicable, label: Not applicable }
+
+  - id: assigned_male
+    text: Were you assigned male at birth?
+    type: yesno
+
+  - id: recurrent
+    text: 2 or more UTIs in the past 6 months?
+    type: yesno
+
+  - id: catheter_or_kidney
+    text: Catheter or kidney condition?
+    type: yesno
+
+  - id: antibiotic_allergy
+    text: Allergic to any antibiotics?
+    type: freetext
+    none_option: true
+
+rules:
+  - id: uti.over_a_week
+    when: { question: duration, equals: over_a_week }
+    outcome: physician
+    reason: Symptoms for over a week
+  - id: uti.systemic
+    when: { question: systemic, equals: "yes" }
+    outcome: physician
+    reason: Fever, back pain or vomiting suggests a possible kidney infection
+  - id: uti.pregnant
+    when: { question: pregnant, equals: "yes" }
+    outcome: physician
+    reason: Possible pregnancy
+  - id: uti.assigned_male
+    when: { question: assigned_male, equals: "yes" }
+    outcome: physician
+    reason: Assigned male at birth, not treated as an uncomplicated UTI
+  - id: uti.recurrent
+    when: { question: recurrent, equals: "yes" }
+    outcome: physician
+    reason: 2 or more UTIs in the past 6 months
+  - id: uti.catheter_or_kidney
+    when: { question: catheter_or_kidney, equals: "yes" }
+    outcome: physician
+    reason: Catheter or kidney condition
+
+summary_template: "{age}-year-old with urinary symptoms ({symptoms}) for {duration}."
+
+pharmacist_scope:
+  status: pending
+  can_prescribe: "PENDING: supplied by the business team from Schedule A."
+  source: Pharmacists Regulation, Schedule A

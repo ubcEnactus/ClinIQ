@@ -1,0 +1,80 @@
+# Headache. Question set from Appendix C, plus the triptan limit from Appendix B.
+# Changing a rule here is a clinical change: it needs a reviewed commit.
+id: headache
+version: 1
+name: Headache
+patient_phrase: a headache
+synonyms:
+  - headache
+  - headaches
+  - head ache
+  - head hurts
+  - head is pounding
+  - pounding head
+  - migraine
+  - tension headache
+
+review:
+  status: pending
+
+questions:
+  - id: sudden_severe
+    text: Did this headache come on suddenly and severely?
+    type: yesno
+
+  - id: fever_stiff_neck
+    text: Do you have a fever and a stiff neck?
+    type: yesno
+
+  - id: neuro_symptoms
+    text: Any new vision changes, weakness, or trouble speaking?
+    type: yesno
+
+  - id: history
+    text: How long have you had headaches like this?
+    type: single
+    options:
+      - { value: first_time, label: First time }
+      - { value: a_few_weeks, label: A few weeks }
+      - { value: months_or_years, label: Months or years }
+
+  - id: tried_nsaid
+    text: Have you already tried ibuprofen or naproxen?
+    type: single
+    options:
+      - { value: did_not_help, label: Yes and it did not help }
+      - { value: helped, label: Yes and it helped }
+      - { value: "no", label: "No" }
+
+rules:
+  # Appendix C says "returns to the emergency screen". The flow stops on this answer.
+  - id: headache.sudden_severe
+    when: { question: sudden_severe, equals: "yes" }
+    outcome: emergency
+    reason: Headache came on suddenly and severely
+  # Appendix C says "routes to emergency". REVIEW: 911 screen or an emergency department?
+  - id: headache.fever_stiff_neck
+    when: { question: fever_stiff_neck, equals: "yes" }
+    outcome: emergency
+    reason: Fever with a stiff neck
+  - id: headache.neuro_symptoms
+    when: { question: neuro_symptoms, equals: "yes" }
+    outcome: emergency
+    reason: New vision changes, weakness or trouble speaking
+  - id: headache.long_history
+    when: { question: history, equals: months_or_years }
+    outcome: physician
+    reason: Headaches for months or years need a proper assessment
+  # Appendix B: pharmacists cannot prescribe triptans; headache is limited to anti-inflammatories.
+  - id: headache.nsaid_failed
+    when: { question: tried_nsaid, equals: did_not_help }
+    outcome: physician
+    reason: Already tried ibuprofen or naproxen without relief; a pharmacist can only prescribe anti-inflammatories for headache
+
+summary_template: "{age}-year-old with headaches ({history}). Ibuprofen or naproxen: {tried_nsaid}."
+
+pharmacist_scope:
+  status: pending
+  can_prescribe: "PENDING: supplied by the business team from Schedule A."
+  cannot_prescribe: Triptans. Headache prescribing is limited to anti-inflammatories.
+  source: Pharmacists Regulation, Schedule A

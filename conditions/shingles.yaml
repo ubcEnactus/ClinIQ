@@ -1,0 +1,90 @@
+# Shingles. Question set from Appendix C.
+# Changing a rule here is a clinical change: it needs a reviewed commit.
+id: shingles
+version: 1
+name: Shingles
+patient_phrase: shingles
+synonyms:
+  - shingles
+  - herpes zoster
+  - zoster
+  - rash on one side
+  - painful rash
+  - blistering rash
+  - band of blisters
+  - burning rash
+
+review:
+  status: pending
+
+questions:
+  - id: rash_started
+    text: When did the rash first appear?
+    type: date
+
+  - id: one_side
+    text: Is the rash on one side of your body only?
+    type: single
+    options:
+      - { value: "yes", label: "Yes" }
+      - { value: "no", label: "No" }
+      - { value: not_sure, label: Not sure }
+
+  - id: face_or_eye
+    text: Is the rash on your face or near your eye?
+    type: yesno
+
+  - id: blisters
+    text: Do you have blisters?
+    type: yesno
+    key_positive: true
+
+  - id: immunosuppressed
+    text: On chemotherapy, steroids, or other medication that lowers your immune system?
+    type: single
+    options:
+      - { value: "yes", label: "Yes" }
+      - { value: "no", label: "No" }
+      - { value: not_sure, label: Not sure }
+
+  - id: pregnant
+    text: Are you pregnant?
+    type: single
+    options:
+      - { value: "yes", label: "Yes" }
+      - { value: "no", label: "No" }
+      - { value: not_applicable, label: Not applicable }
+
+rules:
+  # Appendix C: antivirals work best within 72 hours. The answer is a calendar
+  # date, so 3 or more days ago is treated as possibly past 72 hours.
+  # REVIEW: confirm with clinician.
+  - id: shingles.past_72_hours
+    when: { question: rash_started, at_least_days_ago: 3 }
+    outcome: flag
+    reason: Rash may have appeared more than 72 hours ago; antivirals work best within 72 hours
+  # Appendix C routes only "No". REVIEW: should "Not sure" also route to a physician?
+  - id: shingles.not_one_sided
+    when: { question: one_side, equals: "no" }
+    outcome: physician
+    reason: Rash is not on one side; shingles is one-sided
+  - id: shingles.face_or_eye
+    when: { question: face_or_eye, equals: "yes" }
+    outcome: urgent_physician
+    reason: Rash on the face or near the eye, risk to eyesight
+  # REVIEW: should "Not sure" also route to a physician?
+  - id: shingles.immunosuppressed
+    when: { question: immunosuppressed, equals: "yes" }
+    outcome: physician
+    reason: Taking medication that lowers the immune system
+  - id: shingles.pregnant
+    when: { question: pregnant, equals: "yes" }
+    outcome: physician
+    reason: Pregnant
+
+summary_template: "{age}-year-old with a rash first noticed {rash_started}."
+
+pharmacist_scope:
+  status: pending
+  can_prescribe: "PENDING: supplied by the business team from Schedule A."
+  source: Pharmacists Regulation, Schedule A
