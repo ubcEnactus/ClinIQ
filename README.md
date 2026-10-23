@@ -45,35 +45,3 @@ npm run lint
 ```
 
 The e2e tests use your installed Google Chrome. To use Playwright's bundled browser instead, run `npx playwright install chromium` and set `PW_BUNDLED=1`.
-
-## Where things live
-
-```
-conditions/         one YAML file per condition: questions, routing rules, pharmacist scope
-data/               emergency checklist, list of 21 conditions + contraception, location directory
-src/content/        schemas and loaders for the YAML (a bad file stops the app)
-src/engine/         pure routing logic: emergency, eligibility, rules, routing, ranking,
-                    matching, summary, reference codes
-src/store/          intake state on the phone and the rules for which screen you may be on
-src/app/(patient)/  the 8 patient screens, Call 911, wait times
-tests/              engine/ and store/ (Vitest), e2e/ (Playwright), fixtures/
-```
-
-To add or change a condition, edit its YAML file; no code changes are needed. The schema checks that every rule points at a real question and option. Every rule needs a test case in `tests/engine/routing.test.ts`, and a coverage test fails if one is missing.
-
-## Rules for contributors
-
-These come from the blueprint and aren't negotiable.
-
-1. **A model may suggest, never decide.** Emergency screening, routing, eligibility and allergy matching are tables and if-statements a clinician can read.
-2. **One emergency tick stops everything.** The checklist never gets shorter without written approval from the business team.
-3. **Clinical changes need clinician sign-off.** A change to `conditions/` or `data/emergency-checklist.yaml` is a reviewed commit.
-4. **No patient information in logs, error reports or analytics.** Log the reference code, never the answers.
-5. **No invented numbers.** Waits, locations and regulatory text come from real sources or stay marked pending. Test data lives only in `tests/fixtures/`.
-6. **Fail closed.** An answer that doesn't fit the condition file throws instead of routing someone to a pharmacy.
-7. **Nothing in patient care depends on ClinIQ being up.** Every clinician screen will show a phone number.
-
-## Docs
-
-- Stage 1 design doc: [ClinIQ Stage 1 Design Doc](https://claude.ai/code/artifact/02160753-71b8-4f69-a22a-1614999ed654). Private; ask the project owner for access.
-- The MVP Blueprint and Appendix (PDFs) are the source of truth for clinical rules and scope.
