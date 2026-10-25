@@ -7,6 +7,9 @@ export default function PatientLayout({ children }: { children: React.ReactNode 
   const content = patientContent();
   return (
     <IntakeProvider content={content}>
+      <div className="bg-ink px-4 py-1.5 text-center text-xs text-bg">
+        Demo only, not medical advice. In an emergency, call 911.
+      </div>
       {content.locationsOverride ? (
         <div className="bg-warn-tint px-4 py-1 text-center text-xs text-warn">
           Test location data: {content.locationsOverride}

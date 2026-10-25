@@ -128,8 +128,21 @@ describe("routing order (Appendix D)", () => {
     expect(route(input("uti", { eligibility: noPhn })).destination).toBe("pharmacy");
   });
 
-  it("5. no participating pharmacy open routes to a physician", () => {
+  it("5. with no participating pharmacy open, any open pharmacy (the patient brings the code)", () => {
     const d = route(input("uti", { locations: [PHARM_C, PHARM_CLOSED, CLINIC_FAR, CLINIC_NEAR] }));
+    expect(d.destination).toBe("pharmacy");
+    expect(d.location?.location.id).toBe(PHARM_C.id);
+    expect(d.location?.location.participating).toBe(false);
+  });
+
+  it("5. a participating pharmacy beats a faster non-participating one", () => {
+    const d = route(input("uti"));
+    expect(d.location?.location.id).toBe(PHARM_A.id);
+    expect(d.alternatives[0].location.id).toBe(PHARM_C.id);
+  });
+
+  it("5. no pharmacy open at all routes to a physician", () => {
+    const d = route(input("uti", { locations: [PHARM_CLOSED, CLINIC_FAR, CLINIC_NEAR] }));
     expect(d.destination).toBe("physician");
     expect(d.rule.id).toBe("routing.no_open_pharmacy");
     expect(d.location?.location.id).toBe(CLINIC_FAR.id);
@@ -149,6 +162,12 @@ describe("destinations and alternatives", () => {
     const d = route(input("uti", {}, { systemic: "yes" }));
     expect(d.location?.location.id).toBe(CLINIC_FAR.id);
     expect(d.alternatives.map((a) => a.location.id)).toEqual([CLINIC_NEAR.id]);
+  });
+
+  it("physician: urgent care centres count as walk-ins", () => {
+    const upcc = { ...CLINIC_NEAR, id: "upcc", name: "upcc", kind: "urgent_care" as const, wait: { ...CLINIC_NEAR.wait!, minutes: 5 } };
+    const d = route(input("uti", { locations: [...LOCATIONS, upcc] }, { systemic: "yes" }));
+    expect(d.location?.location.id).toBe("upcc");
   });
 
   it("urgent physician: walk-ins and emergency departments", () => {

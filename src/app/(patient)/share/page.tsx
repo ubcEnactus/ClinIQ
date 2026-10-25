@@ -1,7 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState } from "react";
 import { FieldLabel, Loading, Note, PrimaryButton, Screen, SecondaryButton, inputClass } from "@/components/ui";
 import { STEP_PATH } from "@/store/flow";
 import { useGuard, useIntake } from "@/store/intake-context";
@@ -9,8 +9,20 @@ import { useGuard, useIntake } from "@/store/intake-context";
 // Screen 7. Consent to share this intake with ONE named provider. Declining
 // is a real option and costs only the advance notice. Consent never carries
 // forward. In Stage 1 nothing is sent; the screen records the choice.
+//
+// ?preview=1 shows the screen for a pharmacy that is not a ClinIQ customer,
+// for demos only: it is labelled as a preview and records nothing.
 export default function SharePage() {
-  const ready = useGuard("share");
+  return (
+    <Suspense fallback={<Loading />}>
+      <ShareScreen />
+    </Suspense>
+  );
+}
+
+function ShareScreen() {
+  const preview = useSearchParams().has("preview");
+  const ready = useGuard(preview ? "waiting" : "share");
   const { state, content, dispatch } = useIntake();
   const router = useRouter();
   const prior = typeof state.consent === "object" ? state.consent : null;
@@ -31,6 +43,7 @@ export default function SharePage() {
   const complete = firstName.trim() !== "" && /^\d{4}-\d{2}-\d{2}$/.test(dob);
 
   const agree = () => {
+    if (preview) return router.push(STEP_PATH.waiting);
     dispatch({
       type: "consent",
       consent: {
@@ -56,7 +69,7 @@ export default function SharePage() {
           </PrimaryButton>
           <SecondaryButton
             onClick={() => {
-              dispatch({ type: "consent", consent: "declined" });
+              if (!preview) dispatch({ type: "consent", consent: "declined" });
               router.push(STEP_PATH.waiting);
             }}
           >
@@ -94,7 +107,11 @@ export default function SharePage() {
         <p className="text-sm text-muted">Staff check these against your code before opening your answers.</p>
       </div>
 
-      <Note tone="warn">Demo version: nothing is actually sent yet.</Note>
+      <Note tone="warn">
+        {preview
+          ? `Preview: ${provider.name} isn't a ClinIQ pharmacy, so nothing would be shared. This is what patients of a ClinIQ pharmacy see.`
+          : "Demo version: nothing is actually sent yet."}
+      </Note>
     </Screen>
   );
 }

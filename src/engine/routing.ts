@@ -67,9 +67,11 @@ export function route(input: RoutingInput): RoutingDecision {
     return decide("physician", input.eligibility.rule);
   }
 
-  // 5. The participating pharmacy, open now, with the shortest total time.
-  if (!ranked.some((r) => r.location.kind === "pharmacy" && r.location.participating)) {
-    return decide("physician", { id: "routing.no_open_pharmacy", reason: "No participating pharmacy is open now" });
+  // 5. A pharmacy open now, shortest total time: a participating one if any is
+  // open (it can receive the intake), otherwise any pharmacy, where the patient
+  // hands over the reference code. The code is the route to non-customers.
+  if (!ranked.some((r) => r.location.kind === "pharmacy")) {
+    return decide("physician", { id: "routing.no_open_pharmacy", reason: "No pharmacy is open now" });
   }
   return decide("pharmacy", {
     id: "routing.pharmacy",
@@ -89,11 +91,14 @@ function place(destination: Destination, ranked: RankedLocation[]): Pick<Routing
       location = candidates[0] ?? null;
       break;
     case "physician":
-      candidates = ranked.filter((r) => r.location.kind === "walk_in");
+      candidates = ranked.filter((r) => r.location.kind === "walk_in" || r.location.kind === "urgent_care");
       location = candidates[0] ?? null;
       break;
     case "pharmacy":
-      location = ranked.find((r) => r.location.kind === "pharmacy" && r.location.participating) ?? null;
+      location =
+        ranked.find((r) => r.location.kind === "pharmacy" && r.location.participating) ??
+        ranked.find((r) => r.location.kind === "pharmacy") ??
+        null;
       // Any pharmacy (a non-customer still takes the code) or a walk-in.
       candidates = ranked.filter((r) => r.location.kind !== "emergency_department");
       break;

@@ -28,7 +28,8 @@ const HoursRange = z
 export const LocationSchema = z.strictObject({
   id: z.string().regex(/^[a-z0-9_-]+$/),
   name: z.string().min(1),
-  kind: z.enum(["pharmacy", "walk_in", "emergency_department"]),
+  // urgent_care: an Urgent and Primary Care Centre (UPCC); routed like a walk-in.
+  kind: z.enum(["pharmacy", "walk_in", "urgent_care", "emergency_department"]),
   participating: z.boolean(),
   address: z.string().min(1),
   phone: z.string().min(1),

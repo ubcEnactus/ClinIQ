@@ -63,9 +63,20 @@ export default function DestinationPage() {
       title={HEADLINE[destination]}
       lead={decision.rule.reason}
       footer={
-        <PrimaryButton onClick={() => router.push(participating ? STEP_PATH.share : STEP_PATH.waiting)}>
-          {participating ? "Next" : "Done"}
-        </PrimaryButton>
+        <>
+          <PrimaryButton onClick={() => router.push(participating ? STEP_PATH.share : STEP_PATH.waiting)}>
+            {participating ? "Next" : "Done"}
+          </PrimaryButton>
+          {place && !participating ? (
+            <button
+              type="button"
+              onClick={() => router.push(`${STEP_PATH.share}?preview=1`)}
+              className="py-1 text-sm text-muted underline"
+            >
+              Demo: see how sharing works with a ClinIQ pharmacy
+            </button>
+          ) : null}
+        </>
       }
     >
       {place ? (
@@ -92,6 +103,12 @@ export default function DestinationPage() {
         </Note>
       )}
 
+      {destination === "pharmacy" && place && !participating ? (
+        <Note tone="info">
+          This pharmacy doesn&apos;t use ClinIQ yet. Ask for a minor ailment assessment and tell the pharmacist what you
+          told us.
+        </Note>
+      ) : null}
       {destination === "pharmacy" && eligibility.notes.length ? (
         <Note tone="info">{eligibility.notes.join(". ")}.</Note>
       ) : null}

@@ -1,19 +1,24 @@
 "use client";
 
 import type { Location } from "@/content/data-schemas";
-import { TIME_ZONE } from "@/engine/clock";
+import { TIME_ZONE, localTime } from "@/engine/clock";
 import type { RankedLocation } from "@/engine/locations";
 
 export const KIND_LABEL: Record<Location["kind"], string> = {
   pharmacy: "Pharmacy",
   walk_in: "Walk-in clinic",
+  urgent_care: "Urgent care centre",
   emergency_department: "Emergency department",
 };
 
 const clock = new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE, hour: "numeric", minute: "2-digit" });
+const day = new Intl.DateTimeFormat("en-CA", { timeZone: TIME_ZONE, month: "short", day: "numeric" });
 
-export function readAt(iso: string): string {
-  return clock.format(new Date(iso));
+/** "2:15 p.m." today, "Oct 25, 2:15 p.m." on any other day: a stale wait must look stale. */
+export function readAt(iso: string, now = new Date()): string {
+  const at = new Date(iso);
+  const time = clock.format(at);
+  return localTime(at).date === localTime(now).date ? time : `${day.format(at)}, ${time}`;
 }
 
 export function minutes(n: number): string {

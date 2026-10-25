@@ -21,8 +21,22 @@ describe("shipped content", () => {
     for (const c of conditions) expect(ids).toContain(c.id);
   });
 
-  it("loads the location directory", () => {
-    expect(Array.isArray(loadLocations())).toBe(true);
+  it("loads the real location directory: ten places, no fake customers, every wait sourced", () => {
+    const locations = loadLocations();
+    expect(locations).toHaveLength(10);
+    expect(new Set(locations.map((l) => l.id)).size).toBe(10);
+    expect(locations.filter((l) => l.participating)).toEqual([]);
+    for (const l of locations) {
+      if (l.wait) expect(l.wait.source).not.toMatch(/test|fixture/i);
+      // Greater Vancouver, so a typo in the coordinates can't send someone to the ocean.
+      expect(l.lat).toBeGreaterThan(49.1);
+      expect(l.lat).toBeLessThan(49.4);
+      expect(l.lng).toBeGreaterThan(-123.3);
+      expect(l.lng).toBeLessThan(-122.9);
+    }
+    expect(new Set(locations.map((l) => l.kind))).toEqual(
+      new Set(["pharmacy", "walk_in", "urgent_care", "emergency_department"]),
+    );
   });
 
   it("fails loudly when the conditions directory is missing", () => {

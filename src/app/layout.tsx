@@ -8,6 +8,8 @@ const plexMono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"
 export const metadata: Metadata = {
   title: "ClinIQ",
   description: "Find out where to go for care, and tell your story once.",
+  // A demo, not a public service: keep it out of search results.
+  robots: { index: false, follow: false },
 };
 
 export const viewport: Viewport = {
