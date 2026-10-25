@@ -4,7 +4,7 @@ locations:
   - id: test-pharmacy-a
     name: Test Pharmacy A
     kind: pharmacy
-    participating: true
+    participating: false
     address: 100 Test St, Vancouver
     phone: 604-555-0101
     lat: 49.2917
@@ -34,7 +34,7 @@ locations:
   - id: test-clinic-far
     name: Test Walk-in Far
     kind: walk_in
-    participating: true
+    participating: false
     address: 400 Test St, Vancouver
     phone: 604-555-0104
     lat: 49.3367

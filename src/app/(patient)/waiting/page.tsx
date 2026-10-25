@@ -43,7 +43,7 @@ export default function WaitingPage() {
           <li>Bring your medicines, or a photo of the labels.</li>
           <li>Give your code at the counter.</li>
           {shared ? (
-            <li>You chose to share your answers with them. In this demo version nothing was actually sent.</li>
+            <li>Your answers are on their screen, so they can read them before you arrive.</li>
           ) : null}
         </ul>
       </section>

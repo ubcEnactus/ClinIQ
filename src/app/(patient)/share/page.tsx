@@ -3,7 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useState } from "react";
 import { FieldLabel, Loading, Note, PrimaryButton, Screen, SecondaryButton, inputClass } from "@/components/ui";
-import { STEP_PATH } from "@/store/flow";
+import { STEP_PATH, type Consent } from "@/store/flow";
+import { readInbox, toSharedIntake, upsert, writeInbox } from "@/store/inbox";
 import { useGuard, useIntake } from "@/store/intake-context";
 
 // Screen 7. Consent to share this intake with ONE named provider. Declining
@@ -35,6 +36,7 @@ function ShareScreen() {
   const shared = [
     "Your first name and date of birth",
     `What brought you in: ${conditionLabel}`,
+    ...(state.description ? ["What you told us, in your own words"] : []),
     "Your answers to the questions",
     "That you screened clear of emergency symptoms",
     "Your allergies and medicines",
@@ -44,16 +46,16 @@ function ShareScreen() {
 
   const agree = () => {
     if (preview) return router.push(STEP_PATH.waiting);
-    dispatch({
-      type: "consent",
-      consent: {
-        locationId: provider.id,
-        firstName: firstName.trim(),
-        dateOfBirth: dob,
-        shared,
-        at: new Date().toISOString(),
-      },
-    });
+    const consent: Consent = {
+      locationId: provider.id,
+      firstName: firstName.trim(),
+      dateOfBirth: dob,
+      shared,
+      at: new Date().toISOString(),
+    };
+    dispatch({ type: "consent", consent });
+    // Demo handoff: the clinic's screen on this device picks this up.
+    writeInbox(upsert(readInbox(), toSharedIntake(state, consent, content)));
     router.push(STEP_PATH.waiting);
   };
 
@@ -110,7 +112,7 @@ function ShareScreen() {
       <Note tone="warn">
         {preview
           ? `Preview: ${provider.name} isn't a ClinIQ pharmacy, so nothing would be shared. This is what patients of a ClinIQ pharmacy see.`
-          : "Demo version: nothing is actually sent yet."}
+          : `Demo: your answers go to ${provider.name}'s screen on this device only. Nothing is sent over the internet.`}
       </Note>
     </Screen>
   );

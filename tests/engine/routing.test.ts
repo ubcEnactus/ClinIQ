@@ -164,6 +164,19 @@ describe("destinations and alternatives", () => {
     expect(d.alternatives.map((a) => a.location.id)).toEqual([CLINIC_NEAR.id]);
   });
 
+  it("physician: a participating clinic beats a faster one that can't receive the intake", () => {
+    const partner = { ...CLINIC_NEAR, id: "partner", name: "partner", participating: true };
+    const d = route(input("uti", { locations: [...LOCATIONS, partner] }, { systemic: "yes" }));
+    expect(d.location?.location.id).toBe("partner");
+    expect(d.alternatives[0].location.id).toBe(CLINIC_FAR.id);
+  });
+
+  it("urgent physician: always the fastest, participating or not", () => {
+    const partner = { ...CLINIC_NEAR, id: "partner", name: "partner", participating: true };
+    const d = route(input("shingles", { locations: [...LOCATIONS, partner] }, { face_or_eye: "yes" }));
+    expect(d.location?.location.id).toBe(CLINIC_FAR.id);
+  });
+
   it("physician: urgent care centres count as walk-ins", () => {
     const upcc = { ...CLINIC_NEAR, id: "upcc", name: "upcc", kind: "urgent_care" as const, wait: { ...CLINIC_NEAR.wait!, minutes: 5 } };
     const d = route(input("uti", { locations: [...LOCATIONS, upcc] }, { systemic: "yes" }));

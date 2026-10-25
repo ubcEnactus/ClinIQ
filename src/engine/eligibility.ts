@@ -1,3 +1,6 @@
+/** BC PharmaCare's fee to a pharmacy for a minor ailment or contraception assessment, prescribed or referred. */
+export const ASSESSMENT_FEE = 20;
+
 // Appendix D, eligibility. Decides whether the pharmacy route is available at
 // all, and whether PharmaCare covers the $20 assessment, regardless of condition.
 

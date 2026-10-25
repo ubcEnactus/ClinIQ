@@ -31,6 +31,8 @@ export const LocationSchema = z.strictObject({
   // urgent_care: an Urgent and Primary Care Centre (UPCC); routed like a walk-in.
   kind: z.enum(["pharmacy", "walk_in", "urgent_care", "emergency_department"]),
   participating: z.boolean(),
+  /** A fictional demo provider (data/demo-providers.yaml). Never set on a real place. */
+  demo: z.boolean().optional(),
   address: z.string().min(1),
   phone: z.string().min(1),
   lat: z.number().min(-90).max(90),
@@ -55,6 +57,10 @@ export const LocationSchema = z.strictObject({
 
 export const LocationsFileSchema = z.strictObject({
   locations: z.array(LocationSchema),
+});
+
+export const DemoProvidersFileSchema = z.strictObject({
+  providers: z.array(LocationSchema).min(1),
 });
 
 export type EmergencyChecklist = z.infer<typeof EmergencyChecklistSchema>;

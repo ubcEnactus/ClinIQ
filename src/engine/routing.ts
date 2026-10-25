@@ -91,8 +91,10 @@ function place(destination: Destination, ranked: RankedLocation[]): Pick<Routing
       location = candidates[0] ?? null;
       break;
     case "physician":
+      // A participating clinic first (it gets the intake before the patient
+      // arrives), otherwise the fastest. Urgent cases always take the fastest.
       candidates = ranked.filter((r) => r.location.kind === "walk_in" || r.location.kind === "urgent_care");
-      location = candidates[0] ?? null;
+      location = candidates.find((r) => r.location.participating) ?? candidates[0] ?? null;
       break;
     case "pharmacy":
       location =

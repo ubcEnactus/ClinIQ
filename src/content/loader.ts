@@ -6,6 +6,7 @@ import { ConditionSchema, type Condition } from "./condition-schema";
 import {
   ConditionIndexSchema,
   EmergencyChecklistSchema,
+  DemoProvidersFileSchema,
   LocationsFileSchema,
   type ConditionIndex,
   type EmergencyChecklist,
@@ -55,5 +56,27 @@ export function loadConditionIndex(file = path.join(root(), "data", "conditions-
 }
 
 export function loadLocations(file = path.join(root(), "data", "locations.yaml")): Location[] {
-  return readYaml(file, LocationsFileSchema).locations;
+  const locations = readYaml(file, LocationsFileSchema).locations;
+  const fake = locations.find((l) => l.demo);
+  if (fake) throw new ContentError(`${path.relative(root(), file)}: "${fake.id}" is marked demo; real directories hold real places only`);
+  return locations;
+}
+
+export interface DemoProviders {
+  clinic: Location;
+  pharmacy: Location;
+}
+
+/** The fictional demo clinic and demo pharmacy, the only ClinIQ customers in the app. */
+export function loadDemoProviders(file = path.join(root(), "data", "demo-providers.yaml")): DemoProviders {
+  const { providers } = readYaml(file, DemoProvidersFileSchema);
+  for (const p of providers) {
+    if (!p.demo || !p.participating || p.wait !== null) {
+      throw new ContentError(`demo provider "${p.id}" must be demo: true, participating: true, with no wait`);
+    }
+  }
+  const clinic = providers.find((p) => p.kind === "walk_in");
+  const pharmacy = providers.find((p) => p.kind === "pharmacy");
+  if (!clinic || !pharmacy) throw new ContentError("demo-providers.yaml needs one walk_in clinic and one pharmacy");
+  return { clinic, pharmacy };
 }

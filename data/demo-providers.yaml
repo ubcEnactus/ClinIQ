@@ -1,0 +1,32 @@
+# The fictional providers in the app, for demos of the patient-to-provider
+# handoff. None of the real places in locations.yaml use ClinIQ, so without
+# these nobody could receive a shared intake.
+#
+# Each is labelled as fictional wherever it appears, publishes no wait (we
+# don't invent numbers), and is open around the clock so a demo works any
+# time. /clinic is the demo clinic's screen; /pharmacy is the demo pharmacy's.
+providers:
+  - id: demo-clinic
+    name: ClinIQ Demo Clinic
+    kind: walk_in
+    participating: true
+    demo: true
+    address: Fictional clinic for demos, not a real location
+    phone: 604-555-0100
+    # Downtown Vancouver, so travel times look sensible.
+    lat: 49.2820
+    lng: -123.1180
+    hours: { mon: "00:00-24:00", tue: "00:00-24:00", wed: "00:00-24:00", thu: "00:00-24:00", fri: "00:00-24:00", sat: "00:00-24:00", sun: "00:00-24:00" }
+    wait: null
+
+  - id: demo-pharmacy
+    name: ClinIQ Demo Pharmacy
+    kind: pharmacy
+    participating: true
+    demo: true
+    address: Fictional pharmacy for demos, not a real location
+    phone: 604-555-0101
+    lat: 49.2835
+    lng: -123.1165
+    hours: { mon: "00:00-24:00", tue: "00:00-24:00", wed: "00:00-24:00", thu: "00:00-24:00", fri: "00:00-24:00", sat: "00:00-24:00", sun: "00:00-24:00" }
+    wait: null

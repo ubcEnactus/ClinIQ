@@ -26,7 +26,7 @@ async function tap(page: Page, ...labels: string[]) {
   for (const label of labels) await page.getByRole("button", { name: label, exact: true }).click();
 }
 
-test("a clean UTI reaches a pharmacy, shares, and waits", async ({ page }) => {
+test("a clean UTI reaches the ClinIQ pharmacy, shares, and waits", async ({ page }) => {
   await describe(page, "It burns when I pee");
   await basics(page);
   await expect(page.getByRole("heading")).toContainText("urinary tract infection");
@@ -38,16 +38,17 @@ test("a clean UTI reaches a pharmacy, shares, and waits", async ({ page }) => {
 
   await expect(page).toHaveURL(/\/destination$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Go to a pharmacy");
-  await expect(page.getByText("Test Pharmacy A")).toBeVisible();
+  // The demo pharmacy can receive the intake, so it beats the faster Test Pharmacy A.
+  await expect(page.getByText("ClinIQ Demo Pharmacy").first()).toBeVisible();
   await expect(page.getByTestId("reference-code")).toHaveText(/^[A-HJ-NP-Z2-9]{6}$/);
 
   await tap(page, "Next");
   await expect(page).toHaveURL(/\/share$/);
   await page.getByLabel("First name").fill("Testy");
   await page.getByLabel("Date of birth").fill("1990-01-01");
-  await tap(page, "Share with Test Pharmacy A");
+  await tap(page, "Share with ClinIQ Demo Pharmacy");
   await expect(page).toHaveURL(/\/waiting$/);
-  await expect(page.getByText("nothing was actually sent")).toBeVisible();
+  await expect(page.getByText("Your answers are on their screen")).toBeVisible();
 });
 
 test("an emergency tick cannot be bypassed by deep link, reload or back", async ({ page }) => {
@@ -96,5 +97,6 @@ test("a problem not on the list routes to a doctor", async ({ page }) => {
   await page.getByRole("button", { name: /^Something else/ }).click();
   await expect(page).toHaveURL(/\/destination$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("See a doctor at a walk-in clinic");
-  await expect(page.getByText("Test Walk-in Far")).toBeVisible();
+  // The demo clinic can receive the intake, so it's preferred over a faster walk-in.
+  await expect(page.getByText("ClinIQ Demo Clinic")).toBeVisible();
 });

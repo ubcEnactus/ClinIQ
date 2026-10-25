@@ -1,7 +1,7 @@
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { ConditionSchema } from "@/content/condition-schema";
-import { loadConditionIndex, loadConditions, loadEmergencyChecklist, loadLocations } from "@/content/loader";
+import { loadConditionIndex, loadConditions, loadDemoProviders, loadEmergencyChecklist, loadLocations } from "@/content/loader";
 
 const conditions = loadConditions();
 const uti = structuredClone(conditions.find((c) => c.id === "uti")!);
@@ -37,6 +37,16 @@ describe("shipped content", () => {
     expect(new Set(locations.map((l) => l.kind))).toEqual(
       new Set(["pharmacy", "walk_in", "urgent_care", "emergency_department"]),
     );
+  });
+
+  it("loads the fictional demo clinic and pharmacy, labelled and with no invented wait", () => {
+    const { clinic, pharmacy } = loadDemoProviders();
+    expect(clinic).toMatchObject({ kind: "walk_in", demo: true, participating: true, wait: null });
+    expect(pharmacy).toMatchObject({ kind: "pharmacy", demo: true, participating: true, wait: null });
+    for (const p of [clinic, pharmacy]) {
+      expect(p.address).toMatch(/fictional/i);
+      expect(loadLocations().some((l) => l.id === p.id)).toBe(false);
+    }
   });
 
   it("fails loudly when the conditions directory is missing", () => {
